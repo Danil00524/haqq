@@ -97,20 +97,20 @@ func (k Keeper) MintAndAllocateInflation(ctx sdk.Context) error {
 
 	coinomicsModuleAddr := k.accountKeeper.GetModuleAddress(types.ModuleName)
 
-	// // Allocate first part of coins to EvergreenDAO
-	// evergreen := sdk.NewCoins(k.GetProportion(totalMintOnBlockCoin, params.MintDistribution.EvergreenDao))
-	// err := k.distrKeeper.FundCommunityPool(
-	// 	ctx,
-	// 	evergreen,
-	// 	coinomicsModuleAddr,
-	// )
-	// if err != nil {
-	// 	return err
-	// }
+	// Allocate first part of coins to EvergreenDAO
+	evergreen := sdk.NewCoins(k.GetProportion(totalMintOnBlockCoin, params.MintDistribution.EvergreenDao))
+	err := k.distrKeeper.FundCommunityPool(
+		ctx,
+		evergreen,
+		coinomicsModuleAddr,
+	)
+	if err != nil {
+		return err
+	}
 
 	// Allocate remaining coinomics module balance to stacking rewards
 	staking := k.bankKeeper.GetAllBalances(ctx, coinomicsModuleAddr)
-	err := k.bankKeeper.SendCoinsFromModuleToModule(
+	err = k.bankKeeper.SendCoinsFromModuleToModule(
 		ctx,
 		types.ModuleName,
 		k.feeCollectorName,
